@@ -10,6 +10,8 @@ export default function Header(){
         </a>
         <nav className="sx-nav">
           <a href="/login" className="sx-link">Login</a>
+          <a href="/profile" className="sx-link">Profile</a>
+          <a href="/rewards" className="sx-link">Rewards</a>
           <a href="/signup" className="sx-cta">Get Started</a>
         </nav>
       </div>

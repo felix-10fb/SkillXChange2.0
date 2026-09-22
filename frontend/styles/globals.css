@@ -34,4 +34,7 @@ body{
 .sx-link{ color:var(--sx-purple); text-decoration:none }
 .sx-cta{ background:var(--sx-orange); color:white; padding:8px 12px; border-radius:6px; text-decoration:none }
 
+.reward-card{ display:flex; justify-content:space-between; align-items:center; padding:12px; background:white; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,0.06) }
+.reward-card .small{ color:#666; font-size:13px }
+
 main{ padding:24px }
