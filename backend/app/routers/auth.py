@@ -5,9 +5,13 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from ..db import database, users
 import os
+from fastapi import Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+security = HTTPBearer()
 
 SECRET_KEY = os.getenv("SECRET_KEY", "devsecret")
 ALGORITHM = "HS256"
@@ -49,3 +53,16 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = int(payload.get("sub"))
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    query = users.select().where(users.c.id == user_id)
+    user = await database.fetch_one(query)
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    return user
