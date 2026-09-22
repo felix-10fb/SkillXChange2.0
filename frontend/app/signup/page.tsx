@@ -4,21 +4,20 @@ import Header from '../../../components/Header'
 
 const API = process.env.NEXT_PUBLIC_API_URL || ''
 
-export default function LoginPage(){
+export default function SignupPage(){
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [fullName, setFullName] = useState('')
   const [message, setMessage] = useState('')
 
-  async function handleLogin(e:any){
+  async function handleSignup(e:any){
     e.preventDefault()
     try{
-      const res = await axios.post(`${API}/auth/login`, {email, password})
-      setMessage('Logged in')
-      if(res.data?.access_token){
-        localStorage.setItem('sx_token', res.data.access_token)
-      }
+      const res = await axios.post(`${API}/auth/register`, {email, password, full_name: fullName})
+      setMessage('Registered')
+      if(res.data?.access_token) localStorage.setItem('sx_token', res.data.access_token)
     }catch(err){
-      setMessage('Login failed')
+      setMessage('Registration failed')
     }
   }
 
@@ -26,11 +25,12 @@ export default function LoginPage(){
     <>
       <Header />
       <main style={{maxWidth:480, margin:'32px auto'}}>
-        <h2>Login</h2>
-        <form onSubmit={handleLogin} style={{display:'grid', gap:8}}>
+        <h2>Sign up</h2>
+        <form onSubmit={handleSignup} style={{display:'grid', gap:8}}>
+          <input value={fullName} onChange={e=>setFullName(e.target.value)} placeholder="Full name" />
           <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" />
           <input value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" type="password" />
-          <button type="submit" style={{background:'var(--sx-purple)', color:'white', padding:'8px 12px', borderRadius:6}}>Login</button>
+          <button type="submit" style={{background:'var(--sx-orange)', color:'white', padding:'8px 12px', borderRadius:6}}>Create account</button>
         </form>
         <div style={{marginTop:12}}>{message}</div>
       </main>
